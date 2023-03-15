@@ -1,31 +1,32 @@
 /* ==========================================================================
-    Javascript: The Advanced Concepts (Javascript Foundation II ep. 42)
+    Javascript: The Advanced Concepts (Javascript Foundation II ep. 43)
     
-    NOTE: This lesson discusses a wierd thing that "Classic" javascript does
-          out of the box that deals with variable scope. In short, the
-          'height' variable is not scoped to the weird() function. Instead,
-          Javascript will create that variable in the GLOBAL scope since
-          var, let, or const were not used to initialize the variable.
+    Function vs Block Scope
 ========================================================================== */
 
-/* ==========================================================================
-    Example 1 - Weird variable scope leekage issue.
-========================================================================== */
-// 'use strict' // Will prevent "leekage of global variables"
-// var height = 50; // Is what the compiler will do after reading this file without 'use strict' enabled.
-function weird() {
-    height = 50; // Leekage of global variable since we are not using let or const
-    return height;
+/* =================================================
+    Function Scope (Classic JS)
+    Normally in JavaScript, variables defined within
+    a function's scope can not exist outside of the
+    function.
+================================================= */
+function a() {
+    var secret = '12345';
 }
-
-console.log(weird());
   
-/* ==========================================================================
-    Example 2 - Playing with function scope
-========================================================================== */
-var heyhey = function doodle() {
-  return 'heyhey';
+console.log(secret);
+  
+/* =================================================
+    Block Scope (Classic JS)
+================================================= */
+// Normally in JavaScript, variables defined within
+// a code bock will exist
+// outside of the block.
+if (5 > 4) {
+    var secret = '12345';
 }
 
-console.log(heyhey());
-// console.log(doodle()); // Attempting to call doodle will raise an error because the function is scoped to the variable heyhey()!
+console.log(secret);
+
+// With ES6, if you use let or const... the defined
+// variable will be scoped inside of the code block.
