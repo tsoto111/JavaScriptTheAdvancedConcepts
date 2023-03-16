@@ -1,43 +1,80 @@
 /* ==========================================================================
     Javascript: The Advanced Concepts (Javascript Foundation II ep. 43)
     
-    Block Scope
+    IIFE (immediately involked function expression)
 ========================================================================== */
 
-// Note: Classic JavaScript's block scope for a loop.
-//       The final print statement will log the final
-//       int value after the loop was broken out of.
-console.log('------------- Example 1 -------------');
-console.log('=====================================');
-function loop() {
-    for(var i = 0; i < 5; i++) {
-        console.log('Inner Loop: ' + i);
+console.log(
+    '------------- Example 1 -------------\n' +
+    '====================================='
+);
+// I use to recognize this as a no conflict wrapper.
+// All library code will exist in its own scope to prevent
+// naming conflicts.
+(function() { // This isn't a function declaration, but a functional expression. ()();
+    // This inner function is an anonymous function definition. function(){}
+    console.log('Hello from my IIFE!');
+})();
+
+// What is the benefit? 
+//     - All variables defined in an IIFE will be scoped to that IIFE
+console.log(
+    '=====================================\n\n' +
+    '------------- Example 2 -------------\n' +
+    '=====================================\n' +
+    'We will declare a new variable z and\n' + 
+    'function a().\n'
+);
+var z = 1;
+function a() {
+    return 5;
+}
+console.log(
+    'Var z: ' + z + '\n' +
+    'Function a: ' + a() + '\n' +
+    '-------------------------------------\n' +
+    'We will re-declare a new variable z and function \n' + 
+    'a(). Notice that our old variable and funnction \n' +
+    'will now get replaced! \n'
+);
+var z = 1000;
+function a() {
+    return 'hahahahahah';
+}
+console.log(
+    'Var z: ' + z + '\n' +
+    'Function a: ' + a() + '\n\n' +
+    'Now, this is a problem because we have illustrated a \n' +
+    'namespace conflict. In the wild, imagine one developer \n' +
+    'overwriting another developer\'s function by re-using \n'  +
+    'the same variable or function name unintentionally. This \n' +
+    'would break code in places the second developer wasn\'t \n' + 
+    'working on. \n' +
+    '=====================================\n\n' +
+    '------------- Example 3 -------------\n' +
+    '=====================================\n' +
+    'How can we fix this? \n'
+);
+
+var script1 = (function() {
+    function a() {
+        return 5;
     }
 
-    console.log('final: ' + i);
+    return {a: a()};
+})();
+
+function a() {
+    return 'hahhaha';
 }
 
-loop();
-console.log('=====================================');
-
-// NOTE: ES6 Block based scoping using let via the 
-//       variable definition of the index variable
-//       'i'.
-console.log(' ');
-console.log('------------- Example 2 -------------');
-console.log('=====================================');
-function loop() {
-    for(let i = 0; i < 5; i++) {
-        console.log('Inner Loop: ' + i);
-    }
-
-    // Note: This log will now raise an error because
-    //       the usage of 'let i' in the loop scopes
-    //       the 'i' variable to the loop's code block
-    //       ONLY. It will now not exist outside of
-    //       that code block! 
-    // console.log('final: ' + i);
-}
-
-loop();
-console.log('=====================================');
+console.log(
+    'Global function a(): ' + a() + '\n' +
+    'IIFE scoped function a(): ' + script1.a + '\n\n' +
+    'Note that scoping the a function into the script1 \n' + 
+    'variable only pollutes the global namespace once but \n' +
+    'will encapsulate all of the functions within it \n' +
+    'via the returned object. jQuery use to do this \n' +
+    'way back in the day. This example is an introduction \n' +
+    'to a future lesson called "Modules." \n'
+);
