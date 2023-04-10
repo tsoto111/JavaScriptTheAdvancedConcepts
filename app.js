@@ -1,100 +1,67 @@
 /* ==========================================================================
-    Javascript: The Advanced Concepts (Javascript Foundation II ep. 43)
-    
-    What is 'this' keyword?
-        - 'this' is the object that the function is a property of. Thats
-          it.
-    
-    NOTE: By default, 'this' in the browser will be the browser's 'window'
-          object.
+    Javascript: The Advanced Concepts (Javascript Foundation II ep. 48)
 ========================================================================== */
 console.log(
     '------------- Example 1 -------------\n' +
-    '=====================================\n' +
-    'Global this var type: ' + typeof this + '\n' +
-    '-------------------------------------'
+    'Given this examples code logic, we can see the following \n' +
+    'output which illustrates the changing on the lexical \n' +
+    'scope depnding on the call chain. \n'
 );
-function a() {
-    console.log(
-        'The \'this\' within the function a() is the \n' +
-        'same: ' + this + '\n\n' +
-        'That is because \'this\' is the OBJECT that the \n' +
-        'FUNCTION a() is a property of. Which means the \n' +
-        'GLOBAL context of \'this\' that ALL global functions \n' +
-        'and variables are written to!!!'
-    );
+const a = function() {
+    console.log('Log in A: ' + this);
+    const b = function() {
+        console.log('Log in B: ' + this);
+        const c = {
+            hi: function () {
+                console.log('Log in hi() ' + this);
+            }
+        }
+        c.hi();
+    }
+    b();
 }
 a();
 console.log(
-    '=====================================\n\n' +
-    '------------- Example 2 -------------\n' +
-    'How can we prevent this global assignment \n' +
-    'leakage of \'this\' context into our function? \n' +
-    '    - by invoking \'use scrict\' \n' +
-    '=====================================\n' 
+    '\n' +
+    'Note that both A and B functions \n' +
+    'this scope is global. But, when we call \n' +
+    'the c object\'s hi function... this scope \n' +
+    'becomes c\'s object and is no longer global!\n' +
+    '====================================='
 );
-function b() {
-    'use strict'
-    console.log(
-        'What is \'this\' while invoking \n' +
-        '\'use strict\': ' + this
-    );
-}
-b();
 
 console.log(
-    '=====================================\n\n' +
-    '------------- Example 3 -------------\n' +
-    'Practical usage of \'this\' in javascript. \n' +
-    '=====================================' 
+    '------------- Example 2 -------------\n' +
+    'In this example, if ran in the browser, we \n' +
+    'should see anotherFunk return the global Window \n' +
+    'object instead of the obj constant we defined.\n' +
+    'Side note, this is not true if ran using npm.\n'
 );
 const obj = {
-    name: 'Billy',
+    name: 'Billy', 
     sing() {
-        return 'lalala ' + this.name;
+        console.log('Log in obj: ' + this);
+
+        var anotherFunk = function() {
+            console.log('Log in aontherFunk: ' + this); // This here, will return the Window object in the browser...
+        }
+
+        // NOTE: You can fix the "global" lexical confusion by using the following ES5 syntax
+        var anotherFunkII = () => {
+            console.log('Log in anotherFunkII: ' + this);
+        };
+
+        anotherFunk();
+        anotherFunkII();
     }
 }
-console.log(
-    obj.sing() + '\n' +
-    '=====================================\n\n' +
-    '------------- Example 4 -------------\n' +
-    'Practical example II usage of \'this\' \n' + 
-    'in javascript. \n' +
-    '=====================================' 
-);
-const obj2 = {
-    name: 'Billy',
-    sing() {
-        return 'lalala ' + this.name;
-    },
-    singAgain() {
-        return this.sing() + '!';
-    }
-}
-console.log(
-    obj2.singAgain() + '\n' +
-    '=====================================\n\n' +
-    '------------- Example 5 -------------\n' +
-    'Practical example III usage of \'this\' \n' + 
-    'in javascript. \n' +
-    '=====================================' 
-);
-// The value of this within shared functions is:
-//     1: Gives methods access to their object.
-//     2: Executes same code for multiple objects.Y
-function importantPersion() {
-    console.log(this.name + '!');
-}
 
-const object1 = {
-    name: 'Cassy',
-    importantPersion: importantPersion
-}
-
-const object2 = {
-    name: 'Jacob',
-    importantPersion: importantPersion
-}
-object1.importantPersion();
-object2.importantPersion();
-console.log('=====================================');
+obj.sing();
+console.log(
+    '\n' +
+    'In Javascript, our LEXICAL SCOPE (available \n' +
+    'data + variables where the function was defined) \n' +
+    'determines our available variables. Not where the \n' + 
+    'function is called (dynamic scope).\n' +
+    '====================================='
+);
